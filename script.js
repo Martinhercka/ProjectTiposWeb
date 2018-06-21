@@ -1,4 +1,13 @@
 $(document).ready(function() {
+
+
+    var login;
+    var password;
+    var bet1;
+    var bet2;
+    var bet3;
+    var bet4;
+    var bet5;
 	$("#error").hide();
 
 	   $("#usr").keyup(function(){
@@ -40,8 +49,8 @@ $("#error").hide();
     }
     });
   $("#button").click(function(){
-    var login=$("#usr").val();
-    var password=$("#pwd").val();
+login=$("#usr").val();
+password=$("#pwd").val();
   $.ajax({
     
     url:"http://localhost:8083/auth/login",
@@ -49,10 +58,69 @@ $("#error").hide();
     contentType:'application/json',
     data: JSON.stringify({"login":login,"password":password}),
     success: function(data){
+        var token=data.token;
+        var login = data.login;
+       
         if(data.token!=undefined)
-              window.location.href='secondpage.html';
-          else
-            $("#error").show();
+        {
+               $("#loginform").css("display","none");
+                 $("#betform").css("display","block");
+                     $("#loginfo").text("You are logged as: "+login);
+
+
+            
+                  $("#betbtn").click(function(){
+
+                    bet1= $("#bet1").val();
+                    bet2= $("#bet2").val();
+                    bet3= $("#bet3").val();
+                    bet4= $("#bet4").val();
+                    bet5= $("#bet5").val();
+if(bet1 != "" && bet2!= "" && bet3 != "" && bet4 != "" && bet5 != "" && bet1 <=35 && bet2 <=35 && bet3  <=35 && bet4  <=35 && bet5  <=35) {
+                       $.ajax({
+    
+    url:"http://localhost:8083/bets/new",
+    type: 'POST',
+    contentType:'application/json',
+    data: JSON.stringify({"login":login,"token":token,"bet1":bet1,"bet2":bet2,"bet3":bet3,"bet4":bet4,"bet5":bet5}),
+    success: function(data){
+    
+
+
+    alert("DONE");
+    }
+  
+
+
+
+
+
+
+
+  });
+                   }
+else
+{
+
+alert("Empty input or higher number than 35");
+
+}
+
+
+
+
+
+
+ });
+
+
+
+
+          }
+          else{
+            $("#error").show();}
+
+
     },
     error: function(){
         
@@ -124,9 +192,14 @@ $("#error").hide();
 
  
 });
+
+
+
+
+
+ 
       
 
 
 });
 
- 
